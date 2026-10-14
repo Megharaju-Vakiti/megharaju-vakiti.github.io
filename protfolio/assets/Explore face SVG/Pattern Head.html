@@ -1,0 +1,172 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Pattern Head</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+  /* Layout: one cut-out bust on a transparent ground, ten patches that swap patterns on hover. */
+  :root {
+    --fg: #25252b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --fg: #f4f2f3; color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --fg: #f4f2f3; color-scheme: dark; }
+
+  html, body { height: 100%; background: #ff66c4 !important; }
+  body { display: grid; place-items: center; }
+  main { display: grid; place-items: center; width: 100%; height: 100%; margin: 0; }
+  svg { display: block; width: min(100vw, 142.857vh); height: auto; max-height: 100vh; margin: 0 auto; }
+  .zone { fill: var(--fg); }
+  .hit { fill: transparent; pointer-events: all; cursor: crosshair; }
+  pattern { opacity: 1; transition: opacity 180ms ease; }
+  .mk { fill: #000; }
+  .ms { fill: none; stroke: #000; }
+  .spine { stroke: var(--fg); stroke-width: 3; stroke-dasharray: 2 10; stroke-linecap: round; fill: none; }
+</style>
+
+<main>
+  <svg id="bust" viewBox="0 0 1000 700" role="img" aria-label="Head and shoulders silhouette cut into patches of patterns that change when the cursor passes over them">
+    <defs>
+      <filter id="rough" x="-3%" y="-3%" width="106%" height="106%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="5" result="n"/>
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <clipPath id="sil">
+        <path d="M500 55C575 55 628 100 636 175C640 215 640 240 641 255C656 248 662 262 660 290C658 312 650 326 640 328C638 368 626 400 596 424C588 430 580 436 576 442L574 505C574 540 600 556 690 578C790 600 860 625 890 660L890 690L110 690L110 660C140 625 210 600 310 578C400 556 426 540 426 505L424 442C420 436 412 430 404 424C374 400 362 368 360 328C350 326 342 312 340 290C338 262 344 248 359 255C360 240 360 215 364 175C372 100 425 55 500 55Z"/>
+      </clipPath>
+    </defs>
+    <g filter="url(#rough)">
+      <g id="zones" clip-path="url(#sil)"></g>
+      <path class="spine" d="M500 24V690"/>
+    </g>
+  </svg>
+</main>
+
+<script>
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  var svg = document.getElementById('bust');
+  var zonesG = document.getElementById('zones');
+
+  /* Pattern library. tile = repeat size, rot = base rotation, m = marks that get cut out (drawn black in the mask). */
+  var D = {
+    blank:   { tile: 40, rot: 0,   m: '' },
+    diag:    { tile: 38, rot: 45,  m: '<rect class="mk" width="38" height="14"/>' },
+    diag2:   { tile: 30, rot: -45, m: '<rect class="mk" width="30" height="9"/>' },
+    hstripe: { tile: 30, rot: 0,   m: '<rect class="mk" width="30" height="11"/>' },
+    vstripe: { tile: 30, rot: 0,   m: '<rect class="mk" width="11" height="30"/>' },
+    dots:    { tile: 40, rot: 0,   m: '<circle class="mk" cx="10" cy="10" r="8"/><circle class="mk" cx="30" cy="30" r="8"/>' },
+    bigdots: { tile: 60, rot: 0,   m: '<circle class="mk" cx="15" cy="15" r="14"/><circle class="mk" cx="45" cy="45" r="14"/>' },
+    checks:  { tile: 40, rot: 0,   m: '<rect class="mk" width="20" height="20"/><rect class="mk" x="20" y="20" width="20" height="20"/>' },
+    zigzag:  { tile: 40, rot: 0,   m: '<path class="ms" d="M0 17L10 7L20 17L30 7L40 17M0 37L10 27L20 37L30 27L40 37" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>' },
+    waves:   { tile: 40, rot: 0,   m: '<path class="ms" d="M0 14Q10 4 20 14T40 14M0 34Q10 24 20 34T40 34" stroke-width="6" stroke-linecap="round"/>' },
+    hatch:   { tile: 40, rot: 0,   m: '<path class="ms" d="M0 0L40 40M40 0L0 40" stroke-width="6"/>' },
+    tri:     { tile: 40, rot: 0,   m: '<path class="mk" d="M20 5L35 33H5Z"/>' },
+    plus:    { tile: 40, rot: 0,   m: '<path class="ms" d="M20 9V31M9 20H31" stroke-width="8" stroke-linecap="round"/>' },
+    rings:   { tile: 40, rot: 0,   m: '<circle class="ms" cx="20" cy="20" r="11" stroke-width="6"/>' },
+    moons:   { tile: 40, rot: 0,   m: '<path class="mk" d="M5 32A15 15 0 0 1 35 32Z"/>' },
+    diamond: { tile: 40, rot: 0,   m: '<path class="mk" d="M20 4L36 20L20 36L4 20Z"/>' },
+    grid:    { tile: 40, rot: 0,   m: '<path class="ms" d="M0 0H40M0 0V40" stroke-width="5"/>' },
+    solid:   { tile: 40, rot: 0,   m: '<rect class="mk" width="40" height="40"/>' }
+  };
+  var NAMES = Object.keys(D);
+
+  /* Ten patches: two columns split by the dashed spine, five rows. */
+  var COLS = [[100, 500], [500, 900]];
+  var ROWS = [[30, 170], [170, 310], [310, 440], [440, 575], [575, 700]];
+  var START = [
+    ['diag', 'bigdots'], ['checks', 'zigzag'], ['waves', 'blank'], ['plus', 'solid'], ['diag2', 'dots']
+  ];
+
+  function rect(c, r, attrs) {
+    var el = document.createElementNS(NS, 'rect');
+    el.setAttribute('x', c[0]); el.setAttribute('y', r[0]);
+    el.setAttribute('width', c[1] - c[0]); el.setAttribute('height', r[1] - r[0]);
+    for (var k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+
+  var zones = [];
+  ROWS.forEach(function (r, ri) {
+    COLS.forEach(function (c, ci) {
+      var n = zones.length;
+      var pat = document.createElementNS(NS, 'pattern');
+      pat.setAttribute('id', 'pz' + n);
+      pat.setAttribute('patternUnits', 'userSpaceOnUse');
+
+      var mask = document.createElementNS(NS, 'mask');
+      mask.setAttribute('id', 'mz' + n);
+      mask.setAttribute('maskUnits', 'userSpaceOnUse');
+      mask.setAttribute('x', 0); mask.setAttribute('y', 0);
+      mask.setAttribute('width', 1000); mask.setAttribute('height', 700);
+      mask.appendChild(rect(c, r, { fill: '#fff' }));
+      mask.appendChild(rect(c, r, { fill: 'url(#pz' + n + ')' }));
+
+      var base = rect(c, r, { 'class': 'zone', mask: 'url(#mz' + n + ')', 'pointer-events': 'none' });
+      var hit = rect(c, r, { 'class': 'hit' });
+
+      zonesG.appendChild(pat);
+      zonesG.appendChild(mask);
+      zonesG.appendChild(base);
+      zonesG.appendChild(hit);
+
+      var z = { pat: pat, name: START[ri][ci], scale: 1, ox: 0, oy: 0,
+                targetOx: 0, targetOy: 0, driftFrame: 0,
+                cx: (c[0] + c[1]) / 2, cy: (r[0] + r[1]) / 2 };
+      zones.push(z);
+      render(z);
+      hit.addEventListener('pointerenter', function () { advance(z); });
+      hit.addEventListener('pointerdown', function () { advance(z); });
+      hit.addEventListener('pointermove', function (e) { drift(z, e); });
+    });
+  });
+
+  function render(z) {
+    var d = D[z.name];
+    z.pat.innerHTML = d.m;
+    z.pat.setAttribute('width', d.tile);
+    z.pat.setAttribute('height', d.tile);
+    z.pat.setAttribute('patternTransform',
+      'translate(' + z.ox.toFixed(1) + ' ' + z.oy.toFixed(1) + ') rotate(' + d.rot + ') scale(' + z.scale.toFixed(2) + ')');
+  }
+
+  function advance(z) {
+    var next;
+    do { next = NAMES[Math.floor(Math.random() * NAMES.length)]; } while (next === z.name);
+    z.name = next;
+    z.scale = 0.8 + Math.random() * 0.7;
+    z.pat.style.opacity = '0';
+    render(z);
+    requestAnimationFrame(function () { z.pat.style.opacity = '1'; });
+  }
+
+  function toSvg(e) {
+    var p = svg.createSVGPoint();
+    p.x = e.clientX; p.y = e.clientY;
+    return p.matrixTransform(svg.getScreenCTM().inverse());
+  }
+
+  /* The pattern slides slightly as the cursor moves across its patch. */
+  function drift(z, e) {
+    var p = toSvg(e);
+    z.targetOx = (p.x - z.cx) * 0.48;
+    z.targetOy = (p.y - z.cy) * 0.48;
+    if (z.driftFrame) return;
+    var animateDrift = function () {
+      z.ox += (z.targetOx - z.ox) * 0.22;
+      z.oy += (z.targetOy - z.oy) * 0.22;
+      render(z);
+      if (Math.abs(z.targetOx - z.ox) + Math.abs(z.targetOy - z.oy) > 0.35) {
+        z.driftFrame = requestAnimationFrame(animateDrift);
+      } else {
+        z.ox = z.targetOx;
+        z.oy = z.targetOy;
+        render(z);
+        z.driftFrame = 0;
+      }
+    };
+    z.driftFrame = requestAnimationFrame(animateDrift);
+  }
+})();
+</script>
+
+</body></html>

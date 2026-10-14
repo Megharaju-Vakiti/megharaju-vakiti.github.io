@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 460" preserveAspectRatio="none">
+  <defs>
+    <filter id="grain" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency=".025 .035" numOctaves="3" seed="13" result="noise"/>
+      <feColorMatrix in="noise" type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="table" tableValues="0 .16"/></feComponentTransfer>
+    </filter>
+    <linearGradient id="fold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".76"/>
+      <stop offset=".46" stop-color="#fff" stop-opacity="0"/>
+      <stop offset=".55" stop-color="#77715f" stop-opacity=".17"/>
+      <stop offset="1" stop-color="#fff" stop-opacity=".2"/>
+    </linearGradient>
+    <radialGradient id="dent">
+      <stop offset="0" stop-color="#827d6c" stop-opacity=".20"/>
+      <stop offset=".55" stop-color="#827d6c" stop-opacity=".07"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="700" height="460" fill="#f7f4e8"/>
+  <g opacity=".5">
+    <path d="M0 70 145 0 230 95 150 176 0 150Z" fill="url(#fold)"/>
+    <path d="m145 0 170 32-85 63Z" fill="#77715f" opacity=".09"/>
+    <path d="m230 95 125-78 94 112-130 45Z" fill="url(#fold)"/>
+    <path d="m449 0 128 86-108 43-94-112Z" fill="#fff" opacity=".48"/>
+    <path d="m449 129 126-43 125 88-155 68Z" fill="url(#fold)"/>
+    <path d="m0 150 150 26 34 132-135 45Z" fill="url(#fold)"/>
+    <path d="m184 308 41-179 94 45 39 148-123 70Z" fill="#837d69" opacity=".08"/>
+    <path d="m319 174 130-45 126 113-123 93-98-13Z" fill="url(#fold)"/>
+    <path d="m49 353 135-45 41 79-90 73-101-36Z" fill="#fff" opacity=".58"/>
+    <path d="m225 378 133-72 94 29 36 125H225Z" fill="url(#fold)"/>
+    <path d="m452 335 123-93 125 53v165H488Z" fill="url(#fold)"/>
+  </g>
+  <g fill="none" stroke-linecap="round">
+    <path d="M5 149 150 176 230 95 355 17M150 176l34 132 41 70m0-283 89 45 39 148m-39-148 135-45m-6 174 126 53m-216-79 98 93 123-93M49 353l135-45 41 70m-41-70 123-134m-82 204 133-72 94 29m-55-215 126-43m-126 43 4 161 123-93" stroke="#fff" stroke-width="4" opacity=".62"/>
+    <path d="M0 153 150 181 231 99 357 21M154 180l34 130m45-211 91 46 39 148m-34-147 135-45m-2 173 126 53m-216-79 99 97 124-94M51 357l135-45 41 70m-37-70 122-134m-80 204 133-72 94 29m-51-215 126-43m-122 43 4 161 123-93" stroke="#736e5e" stroke-width="2" opacity=".23"/>
+    <path d="m111 16 16 95-61 92m347-167 3 91 77 68M287 347l-50 59 23 48m333-195-8 91 70 38" stroke="url(#fold)" stroke-width="8" opacity=".5"/>
+  </g>
+  <ellipse cx="130" cy="112" rx="145" ry="88" fill="url(#dent)"/>
+  <ellipse cx="481" cy="187" rx="170" ry="110" fill="url(#dent)"/>
+  <ellipse cx="302" cy="390" rx="190" ry="90" fill="url(#dent)"/>
+  <rect width="700" height="460" filter="url(#grain)" opacity=".42"/>
+</svg>

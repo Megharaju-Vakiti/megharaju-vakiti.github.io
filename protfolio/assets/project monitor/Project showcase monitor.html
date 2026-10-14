@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Project showcase monitor</title>
+<link href="https://fonts.googleapis.com/css2?family=Pathway+Gothic+One&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#d9d9d9;--ffill:#e3e3e3;--hi:#f7f7f7;--lo:#b3b3b3;--hint:#6f6f6f;--s:72px;--cond:'Pathway Gothic One','Arial Narrow',Impact,sans-serif;--body:'PT Sans',Arial,sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#27272a;--ffill:#313135;--hi:#76767c;--lo:#4a4a50;--hint:#a9a9b0}}
+:root[data-theme="dark"]{--bg:#27272a;--ffill:#313135;--hi:#76767c;--lo:#4a4a50;--hint:#a9a9b0}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);font-family:var(--body)}
+#stage{position:relative;width:100%;height:100%;overflow:hidden}
+#monitor{position:absolute;transition:opacity .25s}
+#monitor.shut{opacity:0;pointer-events:none}
+#frame{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.fill{fill:var(--ffill);stroke:var(--hi);stroke-width:3;stroke-linejoin:round}
+.ln{fill:none;stroke:var(--lo);stroke-width:1.2}
+#screen{position:absolute;left:28px;right:28px;top:28px;bottom:calc(var(--s) + 22px);background:#fff;border-radius:6px;overflow:hidden;container-type:size;color:#777}
+.layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(220px,1fr);height:100%}
+.left{display:flex;flex-direction:column;gap:10px;padding:16px;min-width:0;min-height:0}
+.view{flex:1;min-height:0;position:relative;overflow:hidden;border:1px solid #d2d2d2}
+.thumbs{display:flex;gap:6px;height:58px;flex:none}
+.th{width:100px;height:56px;padding:0;border:0;border-bottom:2px solid transparent;background:#eee;position:relative;overflow:hidden;cursor:pointer}
+.th[aria-current=true]{border-bottom-color:#444}
+.th .shot{transform:scale(.125)}
+.right{position:relative;display:flex;flex-direction:column;min-height:0;padding:22px 26px 16px 8px}
+.kick{font:20px var(--cond);color:#555}
+h2{margin:0 52px 14px 0;font:400 clamp(30px,6cqw,50px)/.95 var(--cond);color:#3d3d3d;text-transform:uppercase}
+h3{margin:0 0 6px;font:22px var(--cond);color:#555}
+.txt{flex:1;min-height:0;overflow:auto;scrollbar-width:thin}
+.txt p{margin:0 0 12px;font-size:15px;line-height:1.55;max-width:60ch}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px;padding:0;list-style:none}
+.tags li{border:1px solid #c9c9c9;padding:1px 8px;font-size:13px;border-radius:10px}
+.foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px}
+.launch{display:inline-flex;gap:8px;align-items:center;background:#555;color:#fff;border:0;border-radius:3px;padding:8px 14px;font:20px var(--cond);text-decoration:none;box-shadow:0 2px 0 #333}
+.launch:hover{background:#3d3d3d}
+.nav{display:flex;align-items:center;gap:8px}
+.nav span{font-size:15px;margin-right:2px}
+.ib{width:44px;height:44px;padding:0;border:0;background:none;cursor:pointer;color:#8a8a8a}
+.ib:hover{color:#3d3d3d}
+.ib svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.ib:focus-visible,.launch:focus-visible,.th:focus-visible,#reopen:focus-visible{outline:2px solid #2f4b7c;outline-offset:2px}
+.close{position:absolute;top:16px;right:18px;z-index:2}
+@container (max-width:640px){
+ .layout{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) minmax(0,1.1fr)}
+ .left{padding:10px 12px 0}.thumbs{display:none}
+ .right{padding:8px 16px 10px}h2{font-size:30px;margin-bottom:6px}.close{top:6px;right:8px;background:#fffc;border-radius:50%}
+}
+/* dashboard preview, drawn at 800x450 and scaled to fit */
+.shot{position:absolute;left:0;top:0;width:800px;height:450px;background:#fbfbfa;color:#444;font:14px var(--body);transform-origin:0 0}
+.dh{height:46px;background:var(--a);color:#fff;display:flex;align-items:center;gap:16px;padding:0 20px}
+.dh b{font:400 24px var(--cond)}.dh span{opacity:.8}
+.db{padding:18px 20px}
+.kp{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.k{border:1px solid #e2e2e0;background:#fff;padding:12px 14px}
+.k small,.c small{color:#7a7a7a;display:block}
+.k strong{display:block;font:400 40px/1.1 var(--cond);color:#222}
+.k em{font-style:normal;color:#2e8b57}
+.cr{display:grid;grid-template-columns:1.5fr 1fr;gap:14px;margin-top:14px;height:258px}
+.c{border:1px solid #e2e2e0;background:#fff;padding:12px}
+.bars{display:flex;align-items:flex-end;gap:8px;height:190px;margin-top:10px}
+.bars u{flex:1;background:var(--a);opacity:.85}.bars u:last-child{background:#f2a541;opacity:1}
+.c svg{width:100%;height:190px;margin-top:10px}
+.ln2{fill:none;stroke:var(--a);stroke-width:2.5;vector-effect:non-scaling-stroke}.ar{fill:var(--a);opacity:.13}
+/* resize handles */
+.hd{position:absolute;z-index:5;padding:0;border:0;background:none;touch-action:none}
+.hd::after{content:"";position:absolute;left:50%;top:50%;width:11px;height:11px;margin:-6px;border:2px solid var(--hint);border-radius:50%;background:var(--bg);opacity:0;transition:opacity .15s}
+#monitor:hover .hd::after,.hd:focus-visible::after{opacity:.9}
+@media(hover:none){.hd::after{opacity:.7}}
+.hd[data-d=n],.hd[data-d=s]{left:30px;right:30px;height:20px;cursor:ns-resize}
+.hd[data-d=e],.hd[data-d=w]{top:30px;bottom:calc(var(--s) + 30px);width:20px;cursor:ew-resize}
+.hd[data-d=n]{top:-4px}.hd[data-d=s]{bottom:calc(var(--s) - 14px)}
+.hd[data-d=e]{right:-4px}.hd[data-d=w]{left:-4px}
+.hd[data-d=ne],.hd[data-d=nw],.hd[data-d=se],.hd[data-d=sw]{width:30px;height:30px}
+.hd[data-d=ne]{top:-8px;right:-8px;cursor:nesw-resize}.hd[data-d=nw]{top:-8px;left:-8px;cursor:nwse-resize}
+.hd[data-d=se]{bottom:calc(var(--s) - 22px);right:-8px;cursor:nwse-resize}.hd[data-d=sw]{bottom:calc(var(--s) - 22px);left:-8px;cursor:nesw-resize}
+#reopen{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:none;font:26px var(--cond);color:var(--hint);background:none;border:2px solid var(--hint);border-radius:28px 24px 30px 22px;padding:10px 26px;cursor:pointer}
+#reopen.on{display:block}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><symbol id="c" viewBox="0 0 48 48"><path d="M25.2 3.6C37 3.2 44.6 12.4 44.4 24.6C44.2 36.8 36 44.6 23.4 44.3C11.4 44 3.2 35.6 3.7 23.2C4.1 11.6 12.6 4.2 24.8 3.4C27 3.3 28.4 3.8 29.6 4.3"/></symbol></svg>
+<main id="stage">
+ <div id="monitor">
+  <svg id="frame" aria-hidden="true"></svg>
+  <div id="screen">
+   <div class="layout">
+    <div class="left"><div class="view" id="view"></div><div class="thumbs" id="thumbs"></div></div>
+    <section class="right">
+     <button class="ib close" id="close" aria-label="Close project"><svg viewBox="0 0 48 48"><use href="#c"/><path d="M16.2 15.8L32.4 32.4M32.2 15.4L16.6 32.6"/></svg></button>
+     <div class="kick">Project</div>
+     <h2 id="title"></h2>
+     <h3>About</h3>
+     <div class="txt"><ul class="tags" id="tags"></ul><div id="about"></div></div>
+     <div class="foot">
+      <a class="launch" id="launch" href="#"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M7 3H3.5v11.5H15V11M10 3h5v5M15 3l-6.5 6.5"/></svg>Launch</a>
+      <div class="nav"><span id="count"></span>
+       <button class="ib" id="prev" aria-label="Previous project"><svg viewBox="0 0 48 48"><use href="#c"/><path d="M33.5 24.2L14.6 24.6M22 16.2L14 24.5L22.2 32.8"/></svg></button>
+       <button class="ib" id="next" aria-label="Next project"><svg viewBox="0 0 48 48"><use href="#c"/><path d="M14.5 24.2L33.4 24.6M26 16.2L34 24.5L25.8 32.8"/></svg></button>
+      </div>
+     </div>
+    </section>
+   </div>
+  </div>
+ </div>
+ <button id="reopen">Open project</button>
+</main>
+<script>
+const D=[
+{t:'Retail Sales Dashboard',a:'#2f4b7c',k:[['Revenue','₹4.2Cr','+8.4%'],['Orders','18.6K','+5.1%'],['Margin','23%','+1.2 pts']],bl:'Monthly revenue',ll:'Order trend',b:[40,46,52,48,60,66,58,72,78,70,84,92],l:[30,38,35,50,48,62,60,75,82,90],
+ p:['A single view of revenue, orders and margin across stores, built to replace a weekly spreadsheet pull.','I cleaned the raw sales export in Excel and SQL, modelled it in Power BI, and added month and category slicers so a manager can find a weak region in two clicks.'],g:['Power BI','SQL','Excel']},
+{t:'Hiring Funnel Tracker',a:'#3b6e5f',k:[['Applicants','1,240','+12%'],['Interviews','312','+6%'],['Offers','68','+3%']],bl:'Candidates by stage',ll:'Conversion rate',b:[100,64,42,30,22,14,9,6,5,4,3,2].map(v=>v*.9),l:[20,28,26,40,38,46,55,52,66,70],
+ p:['Tracks every candidate from application to offer so a recruiter can see where people drop off.','Built in Excel with pivot tables and Power Query, with source and role filters and a conversion rate for each stage.'],g:['Excel','Power Query']},
+{t:'Customer Churn Insights',a:'#6a4c93',k:[['Churn','6.4%','-0.8 pts'],['Active users','9.8K','+4%'],['Avg. revenue','₹412','+2.6%']],bl:'Churn by tenure',ll:'Retention curve',b:[88,70,58,50,44,38,34,30,26,24,22,20],l:[95,86,80,74,70,66,62,60,58,56],
+ p:['Shows which customer groups leave and when, so the team can act before renewal.','Python and pandas for cleaning and cohort analysis, charted in Tableau with plan type and tenure breakdowns.'],g:['Python','pandas','Tableau']}];
+const $=s=>document.querySelector(s),S=72,MINW=360,MINH=340;
+const dash=d=>{const n=d.l.length,p=d.l.map((v,i)=>`${(i*100/(n-1)).toFixed(1)},${(50-v*.45).toFixed(1)}`).join(' ');
+return `<div class="shot" style="--a:${d.a}"><div class="dh"><b>${d.t}</b><span>FY 2025–26</span></div><div class="db"><div class="kp">${d.k.map(([l,v,c])=>`<div class="k"><small>${l}</small><strong>${v}</strong><em>${c}</em></div>`).join('')}</div><div class="cr"><div class="c"><small>${d.bl}</small><div class="bars">${d.b.map(v=>`<u style="height:${v}%"></u>`).join('')}</div></div><div class="c"><small>${d.ll}</small><svg viewBox="0 0 100 50" preserveAspectRatio="none"><polygon class="ar" points="0,50 ${p} 100,50"/><polyline class="ln2" points="${p}"/></svg></div></div></div></div>`};
+let cur=0;
+function show(i){cur=(i+D.length)%D.length;const d=D[cur];
+ $('#view').innerHTML=dash(d);$('#title').textContent=d.t;$('#about').innerHTML=d.p.map(x=>`<p>${x}</p>`).join('');
+ $('#tags').innerHTML=d.g.map(x=>`<li>${x}</li>`).join('');$('#count').textContent=`${cur+1}/${D.length}`;
+ document.querySelectorAll('.th').forEach((b,j)=>b.setAttribute('aria-current',j===cur));fit()}
+$('#thumbs').innerHTML=D.map((d,i)=>`<button class="th" aria-label="${d.t}">${dash(d)}</button>`).join('');
+document.querySelectorAll('.th').forEach((b,i)=>b.onclick=()=>show(i));
+$('#prev').onclick=()=>show(cur-1);$('#next').onclick=()=>show(cur+1);
+$('#launch').onclick=e=>e.preventDefault(); /* set href to your live dashboard link */
+function fit(){const v=$('#view'),s=Math.min(v.clientWidth/800,v.clientHeight/450),sh=v.firstElementChild;
+ sh.style.transform=`scale(${s})`;sh.style.left=(v.clientWidth-800*s)/2+'px';sh.style.top=(v.clientHeight-450*s)/2+'px'}
+new ResizeObserver(fit).observe($('#view'));
+/* hand-drawn frame */
+const rng=s=>()=>((s=s*16807%2147483647)/2147483647-.5);
+function loop(x,y,w,h,r,j,R){const a=[],e=(x1,y1,x2,y2)=>{const n=Math.max(1,Math.round(Math.hypot(x2-x1,y2-y1)/60));for(let i=0;i<n;i++)a.push([x1+(x2-x1)*i/n,y1+(y2-y1)*i/n])},
+ c=(cx,cy,t)=>{for(let i=0;i<3;i++){const u=t+i*Math.PI/4;a.push([cx+r*Math.cos(u),cy+r*Math.sin(u)])}};
+ e(x+r,y,x+w-r,y);c(x+w-r,y+r,-Math.PI/2);e(x+w,y+r,x+w,y+h-r);c(x+w-r,y+h-r,0);e(x+w-r,y+h,x+r,y+h);c(x+r,y+h-r,Math.PI/2);e(x,y+h-r,x,y+r);c(x+r,y+r,Math.PI);
+ const p=a.map(([u,v])=>[u+R()*j,v+R()*j]),m=i=>{const q=p[i%p.length],z=p[(i+1)%p.length];return[(q[0]+z[0])/2,(q[1]+z[1])/2]};
+ let d=`M${m(0)}`;for(let i=1;i<=p.length;i++)d+=`Q${p[i%p.length]} ${m(i)}`;return d+'Z'}
+function draw(W,H){const R=rng(7),sy=H-S,cx=W/2,by=H-12,
+ neck=`M${cx-30} ${sy-4}L${cx-44+R()*3} ${by}L${cx+44+R()*3} ${by}L${cx+30} ${sy-4}Z`;
+ $('#frame').innerHTML=`<path class="fill" d="${neck}"/><path class="fill" d="${loop(cx-66,by,132,11,5,1.4,R)}"/><path class="fill" d="${loop(6,6,W-12,sy-6,22,2.2,R)}"/><path class="ln" d="${loop(4,8,W-9,sy-9,22,3.2,R)}"/><path class="ln" d="${loop(cx-64,by+1,130,10,5,2,R)}"/>`}
+/* resizing from all 8 sides */
+const mon=$('#monitor'),st=$('#stage');let box={};
+function put(){mon.style.left=box.x+'px';mon.style.top=box.y+'px';mon.style.width=box.w+'px';mon.style.height=box.h+'px';draw(box.w,box.h)}
+function size(dir,b,dx,dy){let w=b.w,h=b.h;
+ if(dir.includes('e'))w=b.w+dx;if(dir.includes('w'))w=b.w-dx;if(dir.includes('s'))h=b.h+dy;if(dir.includes('n'))h=b.h-dy;
+ w=Math.min(Math.max(MINW,w),st.clientWidth-8);h=Math.min(Math.max(MINH,h),st.clientHeight-8);
+ box={x:dir.includes('w')?b.x+b.w-w:b.x,y:dir.includes('n')?b.y+b.h-h:b.y,w,h};put()}
+const names={n:'top',s:'bottom',e:'right',w:'left',ne:'top-right',nw:'top-left',se:'bottom-right',sw:'bottom-left'};
+Object.keys(names).forEach(dir=>{const el=document.createElement('button');el.className='hd';el.dataset.d=dir;el.setAttribute('aria-label','Resize '+names[dir]+' (drag or use arrow keys)');mon.appendChild(el);
+ el.onpointerdown=e=>{e.preventDefault();el.setPointerCapture(e.pointerId);const b={...box},sx=e.clientX,sy=e.clientY;
+  el.onpointermove=m=>size(dir,b,m.clientX-sx,m.clientY-sy);el.onpointerup=()=>{el.onpointermove=null}};
+ el.onkeydown=e=>{const k={ArrowLeft:[-16,0],ArrowRight:[16,0],ArrowUp:[0,-16],ArrowDown:[0,16]}[e.key];if(k){e.preventDefault();size(dir,{...box},k[0],k[1])}}});
+function init(){const vw=st.clientWidth,vh=st.clientHeight,w=Math.min(1040,vw-32),h=Math.min(Math.round(w*.62)+S,vh-24);
+ box={x:(vw-w)/2,y:(vh-h)/2,w,h};put()}
+$('#close').onclick=()=>{mon.classList.add('shut');$('#reopen').classList.add('on')};
+$('#reopen').onclick=()=>{mon.classList.remove('shut');$('#reopen').classList.remove('on')};
+document.addEventListener('keydown',e=>{if(e.target.classList.contains('hd'))return;if(e.key==='ArrowLeft')show(cur-1);if(e.key==='ArrowRight')show(cur+1)});
+init();show(0);
+</script>
+</body>
+</html>
