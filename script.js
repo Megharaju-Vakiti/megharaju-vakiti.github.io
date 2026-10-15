@@ -89,9 +89,13 @@ if (contactForm) {
       return;
     }
     const form = new FormData(contactForm);
-    const subject = encodeURIComponent(`Portfolio message from ${form.get("name")}`);
-    const body = encodeURIComponent(`${form.get("message")}\n\nReply to: ${form.get("email")}`);
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+    const composeUrl = new URL("https://mail.google.com/mail/");
+    composeUrl.searchParams.set("view", "cm");
+    composeUrl.searchParams.set("fs", "1");
+    composeUrl.searchParams.set("to", CONTACT_EMAIL);
+    composeUrl.searchParams.set("su", `Portfolio message from ${form.get("name")}`);
+    composeUrl.searchParams.set("body", `${form.get("message")}\n\nReply to: ${form.get("email")}`);
+    window.location.href = composeUrl.toString();
   });
 }
 

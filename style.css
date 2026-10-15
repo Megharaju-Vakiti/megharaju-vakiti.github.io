@@ -2515,3 +2515,8 @@ body.about .category-card--love .category-label {
   transform:translate(-50%,-50%) !important;
 }
 
+
+.contact-direct-details { display:flex; flex-direction:column; align-items:flex-start; gap:8px; margin-top:18px; font:16px/1.45 PortfolioBody,Arial,sans-serif; overflow-wrap:anywhere; }
+.contact-direct-details a { color:#fff; text-decoration:underline; text-underline-offset:3px; }
+.contact-direct-details a:hover,.contact-direct-details a:focus-visible { color:#d8c0ec; }
+@media(max-width:760px) { .contact-direct-details { gap:5px; margin-top:10px; font-size:13px; } }
