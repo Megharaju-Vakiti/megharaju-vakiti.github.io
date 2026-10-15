@@ -2525,6 +2525,10 @@ body.about .category-card--love .category-label {
   display: none;
   position: fixed;
   inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  box-sizing: border-box;
   z-index: 10000;
   place-items: center;
   background: #fff;
