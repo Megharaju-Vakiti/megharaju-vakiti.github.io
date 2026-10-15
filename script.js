@@ -160,6 +160,16 @@ if (document.body.classList.contains("about")) {
       exploreFaceLoaded = true;
       revealLoadedExplore();
     }, { once: true });
+    // A cached/local iframe can finish before this deferred script attaches listeners.
+    try {
+      if (exploreFace.contentDocument?.readyState === "complete") {
+        exploreFaceLoaded = true;
+        exploreFace.dataset.loaded = "true";
+        revealLoadedExplore();
+      }
+    } catch {
+      // The load event remains the fallback if the frame is cross-origin.
+    }
   }
   const revealExploreFace = () => {
     if (exploreFaceLoaded) revealLoadedExplore();
