@@ -2496,3 +2496,14 @@ body.about #about-top .explore-cta {
 body.about #about-top .explore-cta h1,
 body.about #about-top .explore-cta h1 a { visibility:visible !important; opacity:1 !important; }
 
+
+/* Phone and tablet only: keep the Skills heading behind the solar system artwork. */
+@media (max-width:1024px) {
+  body.skills .solar-orbit > .skills-title {
+    z-index:0 !important;
+    color:rgba(170,170,170,.34) !important;
+    text-shadow:none !important;
+  }
+  body.skills .solar-orbit > svg { position:relative; z-index:1 !important; }
+}
+
