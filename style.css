@@ -2483,3 +2483,18 @@ body.projects .monitor-copy::-webkit-scrollbar-thumb { background:#858585; borde
 
 /* Keep Explore available even if the embedded head artwork loads slowly. */
 body.about #about-top .explore-cta { opacity:1; animation:none; }
+
+/* Keep Explore visible immediately, independently of the embedded artwork load. */
+body.about #main-content > #about-top:not(:target),
+body.about #main-content > #about-top:target { display:grid !important; }
+body.about #about-top .explore-cta {
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  z-index:20 !important;
+  pointer-events:auto !important;
+  animation:none !important;
+}
+body.about #about-top .explore-cta h1,
+body.about #about-top .explore-cta h1 a { visibility:visible !important; opacity:1 !important; }
+

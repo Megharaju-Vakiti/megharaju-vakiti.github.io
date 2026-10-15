@@ -177,29 +177,8 @@ if (document.body.classList.contains("about")) {
   revealExploreFace();
   window.addEventListener("hashchange", revealExploreFace);
 
-  const exploreHeading = document.querySelector("#about-top h1");
-  const exploreLink = exploreHeading?.querySelector("a") || exploreHeading;
-  if (exploreLink) {
-    const label = exploreLink.textContent;
-    exploreLink.setAttribute("aria-label", label);
-    let characterIndex = 0;
-    const characters = Array.from(label).map((character) => {
-      if (/\s/.test(character)) return document.createTextNode(character);
-      const span = document.createElement("span");
-      span.className = "home-heading-char";
-      span.dataset.char = character;
-      span.dataset.entryDirection = entranceDirections[characterIndex % entranceDirections.length];
-      span.setAttribute("aria-hidden", "true");
-      const glyph = document.createElement("span");
-      glyph.className = "home-heading-glyph";
-      glyph.textContent = character;
-      span.append(glyph);
-      characterIndex += 1;
-      return span;
-    });
-    exploreLink.replaceChildren(...characters);
-    animateDirectionalText([...exploreLink.querySelectorAll(".home-heading-char")], 620, 24);
-  }
+  const exploreLink = document.querySelector("#about-top h1 a");
+  exploreLink?.setAttribute("aria-label", "Explore About categories");
 
   const horizontalSliceClips = [
     "inset(0 0 75% 0)",
