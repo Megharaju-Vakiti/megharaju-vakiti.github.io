@@ -2507,3 +2507,11 @@ body.about #about-top .explore-cta h1 a { visibility:visible !important; opacity
   body.skills .solar-orbit > svg { position:relative; z-index:1 !important; }
 }
 
+
+/* Center the What I Love label over the heart at every screen size. */
+body.about .category-card--love .category-label {
+  left:50% !important;
+  top:50% !important;
+  transform:translate(-50%,-50%) !important;
+}
+
