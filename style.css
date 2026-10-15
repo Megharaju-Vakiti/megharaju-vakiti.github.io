@@ -2479,3 +2479,7 @@ body.projects .monitor-copy:focus-visible { outline:2px solid #777; outline-offs
 body.projects .monitor-copy::-webkit-scrollbar { width:8px; }
 body.projects .monitor-copy::-webkit-scrollbar-track { background:#ededed; border-radius:8px; }
 body.projects .monitor-copy::-webkit-scrollbar-thumb { background:#858585; border:2px solid #ededed; border-radius:8px; }
+
+
+/* Keep Explore available even if the embedded head artwork loads slowly. */
+body.about #about-top .explore-cta { opacity:1; animation:none; }
