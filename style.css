@@ -2533,6 +2533,13 @@ body.about .category-card--love .category-label {
   transition: opacity 280ms ease, visibility 280ms ease;
 }
 html.js .page-loader { display: grid; }
+body.home .page-loader { background: linear-gradient(180deg, #ffd94c 0%, #ffb64c 58%, #ff9d62 100%); }
+body.about .page-loader { background: #ff66c4; }
+body.skills .page-loader { background: #000; }
+body.skills:has(.skill-detail:target) .page-loader { background: linear-gradient(180deg, #c9c9c9 0%, #a9a9a9 100%); }
+body.skills:has(#sql:target, #data-storytelling:target, #power-bi:target, #data-cleaning:target) .page-loader { background: linear-gradient(180deg, #c9c9c9 0%, #a4a4a4 100%); }
+body.projects .page-loader { background: #dff1d6; }
+body.contact .page-loader { background: #e2a9f1; }
 .page-loader img {
   display: block;
   width: min(220px, 70vw);
