@@ -2485,8 +2485,6 @@ body.projects .monitor-copy::-webkit-scrollbar-thumb { background:#858585; borde
 body.about #about-top .explore-cta { opacity:1; animation:none; }
 
 /* Keep Explore visible immediately, independently of the embedded artwork load. */
-body.about #main-content > #about-top:not(:target),
-body.about #main-content > #about-top:target { display:grid !important; }
 body.about #about-top .explore-cta {
   display:block !important;
   visibility:visible !important;
