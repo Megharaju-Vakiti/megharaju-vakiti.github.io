@@ -2,6 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <script>
+    document.documentElement.classList.add("js");
+    const loaderStartedAt = performance.now();
+    window.addEventListener("load", () => {
+      const loader = document.getElementById("page-loader");
+      if (!loader) return;
+      window.setTimeout(() => {
+        loader.classList.add("is-hidden");
+        loader.setAttribute("aria-hidden", "true");
+        window.setTimeout(() => loader.remove(), 300);
+      }, Math.max(0, 450 - (performance.now() - loaderStartedAt)));
+    }, { once: true });
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="About Megharaju, education, interests, and approach to data.">
   <title>Megharaju | About</title>
@@ -10,6 +23,9 @@
   <style>html, body.about, body.about #main-content, body.about #about-top { background-color: #ff66c4 !important; }</style>
 </head>
 <body class="about">
+<div class="page-loader" id="page-loader" role="status" aria-label="Loading page">
+  <img src="assets/loading%20svg/handdrawn-loading.svg" width="220" height="99" alt="" aria-hidden="true">
+</div>
 <nav class="site-nav" aria-label="Main navigation"><a href="index.html">Home</a><span>/</span><a href="about.html" aria-current="page">About</a><span>/</span><a href="skills.html">Skills</a><span>/</span><a href="projects.html">Projects</a><span>/</span><a href="contact.html">Contact</a></nav>
 <a class="home-nav-button" href="index.html#slide-1" aria-label="Go to home page" title="Home">
   <img class="home-nav-filled" src="assets/home%20navigation%20button/elements.png" alt="">
