@@ -1,7 +1,7 @@
 @font-face {
   font-family: HandCutTall;
   src: url("assets/Fonts/HandCutTall-Regular.otf") format("opentype");
-  font-display: optional;
+  font-display: swap;
 }
 @font-face {
   font-family: HandCutCondensed;

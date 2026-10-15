@@ -5,9 +5,14 @@
   <script>
     document.documentElement.classList.add("js");
     const loaderStartedAt = performance.now();
-    window.addEventListener("load", () => {
+    window.addEventListener("load", async () => {
       const loader = document.getElementById("page-loader");
       if (!loader) return;
+      await Promise.race([
+        document.fonts?.ready ?? Promise.resolve(),
+        new Promise((resolve) => window.setTimeout(resolve, 5000))
+      ]);
+      await new Promise((resolve) => window.requestAnimationFrame(() => window.requestAnimationFrame(resolve)));
       window.setTimeout(() => {
         loader.classList.add("is-hidden");
         loader.setAttribute("aria-hidden", "true");
@@ -19,7 +24,7 @@
   <meta name="description" content="About Megharaju, education, interests, and approach to data.">
   <title>Megharaju | About</title>
   <link rel="preload" href="assets/Fonts/HandCutTall-Regular.otf" as="font" type="font/otf" crossorigin>
-  <link rel="stylesheet" href="style.css?v=portfolio-loader-20261015">
+  <link rel="stylesheet" href="style.css?v=portfolio-font-loader-20261015">
   <style>html, body.about, body.about #main-content, body.about #about-top { background-color: #ff66c4 !important; }</style>
 </head>
 <body class="about">
