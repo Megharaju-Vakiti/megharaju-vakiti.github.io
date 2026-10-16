@@ -279,8 +279,7 @@ if (document.body.classList.contains("about")) {
     };
 
     const endCardReveal = () => {
-      if (!active) return;
-      if (card.classList.contains("is-pinned-revealed")) return;
+      if (!active || card.classList.contains("is-pinned-revealed")) return;
       active = false;
       window.clearTimeout(sliceCleanupTimer);
       sliceAnimations.forEach((animation) => animation.cancel());
