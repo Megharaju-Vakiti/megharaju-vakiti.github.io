@@ -279,7 +279,7 @@ if (document.body.classList.contains("about")) {
     };
 
     const endCardReveal = () => {
-      if (!active) return;
+      if (!active || card.classList.contains("is-pinned-revealed")) return;
       active = false;
       window.clearTimeout(sliceCleanupTimer);
       sliceAnimations.forEach((animation) => animation.cancel());
@@ -290,10 +290,10 @@ if (document.body.classList.contains("about")) {
       card.classList.remove("is-revealed");
     };
 
-    card.addEventListener("pointerenter", startCardReveal);
-    card.addEventListener("pointerleave", endCardReveal);
-    card.addEventListener("focus", startCardReveal);
-    card.addEventListener("blur", endCardReveal);
+    if (!card.classList.contains("category-card--love")) card.addEventListener("pointerenter", startCardReveal);
+    if (!card.classList.contains("category-card--love")) card.addEventListener("pointerleave", endCardReveal);
+    if (!card.classList.contains("category-card--love")) card.addEventListener("focus", startCardReveal);
+    if (!card.classList.contains("category-card--love")) card.addEventListener("blur", endCardReveal); else card.addEventListener("click", (event) => { if (!card.classList.contains("is-pinned-revealed")) { event.preventDefault(); card.classList.add("is-pinned-revealed"); card.setAttribute("aria-label", "Love revealed. Click again to open What I Love artwork"); startCardReveal(); } });
   });
 }
 
