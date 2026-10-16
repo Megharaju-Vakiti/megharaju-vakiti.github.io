@@ -2425,7 +2425,7 @@ body.projects .monitor-close { position:absolute; top:16px; right:18px; }
 .about .explore-face { opacity:0; transition:opacity 220ms ease; }
 .about .explore-cta { opacity:0; animation:none; }
 .about .explore-screen.is-ready .explore-face { opacity:1; }
-.about .explore-screen.is-ready .explore-cta { animation:explore-cta-arrive 650ms cubic-bezier(.2,.75,.25,1) both; }
+.about .explore-screen.is-ready .explore-cta { animation:explore-cta-arrive 900ms cubic-bezier(.2,.72,.25,1) both; }
 @media (prefers-reduced-motion:reduce) {
   .about .explore-face { transition:none; }
   .about .explore-screen.is-ready .explore-face { opacity:1; }
@@ -2481,20 +2481,7 @@ body.projects .monitor-copy::-webkit-scrollbar-track { background:#ededed; borde
 body.projects .monitor-copy::-webkit-scrollbar-thumb { background:#858585; border:2px solid #ededed; border-radius:8px; }
 
 
-/* Keep Explore available even if the embedded head artwork loads slowly. */
-body.about #about-top .explore-cta { opacity:1; animation:none; }
 
-/* Keep Explore visible immediately, independently of the embedded artwork load. */
-body.about #about-top .explore-cta {
-  display:block !important;
-  visibility:visible !important;
-  opacity:1 !important;
-  z-index:20 !important;
-  pointer-events:auto !important;
-  animation:none !important;
-}
-body.about #about-top .explore-cta h1,
-body.about #about-top .explore-cta h1 a { visibility:visible !important; opacity:1 !important; }
 
 
 /* Phone and tablet only: keep the Skills heading behind the solar system artwork. */
@@ -2536,6 +2523,18 @@ body.about .category-card--love .category-label {
   transition: opacity 280ms ease, visibility 280ms ease;
 }
 html.js .page-loader { display: grid; }
+body.home .page-loader { background: linear-gradient(180deg, #ffd94c 0%, #ffb64c 58%, #ff9d62 100%); }
+body.home:has(#slide-2:target) .page-loader { background: linear-gradient(180deg, #d9b1f5 0%, #c9a3ee 100%); }
+body.home:has(#slide-3:target) .page-loader { background: linear-gradient(180deg, #f2adba 0%, #f39daf 100%); }
+body.home:has(#slide-4:target) .page-loader { background: linear-gradient(180deg, #a2e1a2 0%, #8ed69b 100%); }
+body.home:has(#slide-5:target) .page-loader { background: linear-gradient(180deg, #e2ddda 0%, #c8c8c8 100%); }
+body.home:has(#slide-6:target) .page-loader { background: linear-gradient(180deg, #edc7b2 0%, #e3b59e 100%); }
+body.about .page-loader { background: #ff66c4; }
+body.skills .page-loader { background: #000; }
+body.skills:has(.skill-detail:target) .page-loader { background: linear-gradient(180deg, #c9c9c9 0%, #a9a9a9 100%); }
+body.skills:has(#sql:target, #data-storytelling:target, #power-bi:target, #data-cleaning:target) .page-loader { background: linear-gradient(180deg, #c9c9c9 0%, #a4a4a4 100%); }
+body.projects .page-loader { background: #dff1d6; }
+body.contact .page-loader { background: #e2a9f1; }
 body.skills .page-loader img { filter: brightness(0) invert(1); }
 body.skills:has(.skill-detail:target) .page-loader img { filter: none; }
 .page-loader img {
