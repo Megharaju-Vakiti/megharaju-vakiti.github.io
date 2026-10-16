@@ -280,6 +280,7 @@ if (document.body.classList.contains("about")) {
 
     const endCardReveal = () => {
       if (!active) return;
+      if (card.classList.contains("is-pinned-revealed")) return;
       active = false;
       window.clearTimeout(sliceCleanupTimer);
       sliceAnimations.forEach((animation) => animation.cancel());
@@ -290,9 +291,19 @@ if (document.body.classList.contains("about")) {
       card.classList.remove("is-revealed");
     };
 
-    card.addEventListener("pointerenter", startCardReveal);
+    card.addEventListener("click", (event) => {
+      if (!card.classList.contains("is-pinned-revealed")) {
+        event.preventDefault();
+        card.classList.add("is-pinned-revealed");
+        const title = label.textContent.trim();
+        const destination = card.classList.contains("category-card--love")
+          ? "What I Love artwork"
+          : `${title} page`;
+        card.setAttribute("aria-label", `${title} revealed. Click again to open ${destination}`);
+        startCardReveal();
+      }
+    });
     card.addEventListener("pointerleave", endCardReveal);
-    card.addEventListener("focus", startCardReveal);
     card.addEventListener("blur", endCardReveal);
   });
 }
