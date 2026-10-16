@@ -2552,3 +2552,32 @@ body.skills:has(.skill-detail:target) .page-loader img { filter: none; }
 @media (prefers-reduced-motion: reduce) {
   .page-loader { transition: none; }
 }
+
+/* Keep the contact artwork inside its inner border on phones and tablets. */
+@media (max-width:1024px) and (hover:none) and (pointer:coarse) {
+  body.contact .contact-frame {
+    width:min(100%,640px);
+    grid-template-columns:minmax(0,1fr);
+    gap:14px;
+    padding:32px clamp(46px,9vw,76px) 28px;
+  }
+  body.contact .contact-form { padding:4px 0 10px; }
+  body.contact .contact-frame-art { stroke-width:3; }
+}
+
+/* Use the stable small viewport to keep the loader centered as browser bars move. */
+@media (max-width:1024px) and (hover:none) and (pointer:coarse) {
+  .page-loader {
+    inset:auto;
+    top:0;
+    left:0;
+    width:100%;
+    height:100svh;
+  }
+  .page-loader img {
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+  }
+}
