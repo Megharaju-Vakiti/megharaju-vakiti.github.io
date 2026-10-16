@@ -2423,9 +2423,9 @@ body.projects .monitor-close { position:absolute; top:16px; right:18px; }
 
 /* Reveal the interactive head and Explore control together after the iframe is ready. */
 .about .explore-face { opacity:0; transition:opacity 220ms ease; }
-.about .explore-cta { opacity:0; animation:none; }
+.about .explore-cta { opacity:1; animation:none; }
 .about .explore-screen.is-ready .explore-face { opacity:1; }
-.about .explore-screen.is-ready .explore-cta { animation:explore-cta-arrive 900ms cubic-bezier(.2,.72,.25,1) both; }
+.about .explore-screen.is-ready .explore-cta { opacity:1; animation:none; }
 @media (prefers-reduced-motion:reduce) {
   .about .explore-face { transition:none; }
   .about .explore-screen.is-ready .explore-face { opacity:1; }

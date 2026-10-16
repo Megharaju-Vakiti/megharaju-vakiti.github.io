@@ -129,30 +129,50 @@ const animateDirectionalText = (elements, duration, stagger) => {
   });
 };
 
-/* Apply the same directional letter entrance to About's Explore title. */
+/* Reveal the head artwork and Explore control together when either is revisited. */
 if (document.body.classList.contains("about")) {
   const exploreScreen = document.querySelector("#about-top");
   const exploreFace = document.querySelector(".explore-face");
+  const exploreCta = document.querySelector(".explore-cta");
   const isExploreView = () => !window.location.hash || window.location.hash === "#about-top";
   let exploreFaceLoaded = exploreFace?.dataset.loaded === "true";
+
   const revealLoadedExplore = () => {
-    if (!exploreScreen || !exploreFace || !isExploreView()) return;
+    if (!exploreScreen || !exploreFace || !exploreCta || !isExploreView()) return;
     requestAnimationFrame(() => {
       if (getComputedStyle(exploreScreen).display === "none") return;
-      exploreScreen.classList.add("is-ready");
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
       exploreFace.getAnimations().forEach((animation) => animation.cancel());
+      exploreCta.getAnimations().forEach((animation) => animation.cancel());
       exploreFace.style.clipPath = "inset(0 50% 0 50%)";
-      exploreFace.animate([
-        { clipPath: "inset(0 50% 0 50%)" },
-        { clipPath: "inset(0 0 0 0)" }
-      ], {
+      exploreCta.style.opacity = "0";
+      exploreCta.style.transform = "translate(-50%, -50%) translateY(14px)";
+      exploreScreen.classList.add("is-ready");
+
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        exploreFace.style.clipPath = "inset(0)";
+        exploreCta.style.opacity = "1";
+        exploreCta.style.transform = "translate(-50%, -50%)";
+        return;
+      }
+
+      const timing = {
         duration: 900,
         easing: "cubic-bezier(.2,.72,.25,1)",
         fill: "forwards"
-      });
+      };
+      const faceReveal = exploreFace.animate([
+        { clipPath: "inset(0 50% 0 50%)" },
+        { clipPath: "inset(0 0 0 0)" }
+      ], timing);
+      exploreCta.animate([
+        { opacity: 0, transform: "translate(-50%, -50%) translateY(14px)" },
+        { opacity: 1, transform: "translate(-50%, -50%)" }
+      ], timing);
+      faceReveal.onfinish = () => { exploreFace.style.clipPath = "inset(0)"; };
     });
   };
+
   if (exploreFace) {
     exploreFace.addEventListener("load", () => {
       exploreFaceLoaded = true;
@@ -160,11 +180,9 @@ if (document.body.classList.contains("about")) {
       revealLoadedExplore();
     }, { once: true });
     exploreFace.addEventListener("error", () => {
-      // Keep the Explore control usable if the artwork fails to load.
       exploreFaceLoaded = true;
       revealLoadedExplore();
     }, { once: true });
-    // A cached/local iframe can finish before this deferred script attaches listeners.
     try {
       if (exploreFace.contentDocument?.readyState === "complete") {
         exploreFaceLoaded = true;
@@ -172,9 +190,17 @@ if (document.body.classList.contains("about")) {
         revealLoadedExplore();
       }
     } catch {
-      // The load event remains the fallback if the frame is cross-origin.
+      // The iframe load event is the fallback for cross-origin artwork.
     }
   }
+
+  window.setTimeout(() => {
+    if (!exploreFaceLoaded) {
+      exploreFaceLoaded = true;
+      revealLoadedExplore();
+    }
+  }, 3000);
+
   const revealExploreFace = () => {
     if (exploreFaceLoaded) revealLoadedExplore();
   };
