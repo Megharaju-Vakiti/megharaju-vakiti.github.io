@@ -222,6 +222,7 @@ if (document.body.classList.contains("about")) {
     const label = card.querySelector(".category-label");
     if (!filledArtwork || !artWrap || !label) return;
 
+    const initialAriaLabel = card.getAttribute("aria-label") || label.textContent.trim();
     const isHandCard = card.classList.contains("category-card--hand");
     let active = false;
     let sliceLayer;
@@ -304,6 +305,15 @@ if (document.body.classList.contains("about")) {
     });
     card.addEventListener("pointerleave", endCardReveal);
     card.addEventListener("blur", endCardReveal);
+
+    const resetPinnedReveal = () => {
+      if (!card.classList.contains("is-pinned-revealed")) return;
+      card.classList.remove("is-pinned-revealed");
+      card.setAttribute("aria-label", initialAriaLabel);
+      endCardReveal();
+    };
+    window.addEventListener("hashchange", resetPinnedReveal);
+    window.addEventListener("pageshow", resetPinnedReveal);
   });
 }
 
