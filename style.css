@@ -2574,3 +2574,7 @@ body.skills:has(.skill-detail:target) .page-loader img { filter: none; }
     place-items:center;
   }
 }
+/* Restore the project archive to white paper with readable gray text. */
+body.projects .project-paper { background-color: #fff !important; color: #565252 !important; }
+body.projects .project-paper h2, body.projects .project-paper .paper-number, body.projects .project-paper .paper-label, body.projects .project-paper .paper-summary, body.projects .project-paper .paper-open, body.projects .project-paper .paper-tools > span { color: #565252 !important; text-shadow: none !important; }
+body.projects .project-paper .paper-tools > span { border-color: rgba(86, 82, 82, 0.45); background: rgba(86, 82, 82, 0.06); }
