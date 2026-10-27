@@ -2579,3 +2579,15 @@ body.skills:has(.skill-detail:target) .page-loader img { filter: none; }
     place-items:center;
   }
 }
+/* Restore the project archive to white paper with readable gray text. */
+body.projects .project-paper { background-color: #fff !important; color: #565252 !important; }
+body.projects .project-paper h2, body.projects .project-paper .paper-number, body.projects .project-paper .paper-label, body.projects .project-paper .paper-summary, body.projects .project-paper .paper-open, body.projects .project-paper .paper-tools > span { color: #565252 !important; text-shadow: none !important; }
+body.projects .project-paper .paper-tools > span { border-color: rgba(86, 82, 82, 0.45); background: rgba(86, 82, 82, 0.06); }
+/* Cleaner white paper, stronger text contrast, and a folded top corner. */
+body.projects .project-paper { color: #454141 !important; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12), 4px 4px 0 rgba(255, 255, 255, 0.82) !important; }
+body.projects .project-paper::before { opacity: 0.14; }
+body.projects .project-paper::after { content: ""; position: absolute; z-index: 2; top: 0; right: 0; width: 34px; height: 34px; pointer-events: none; background: linear-gradient(135deg, #d7d4cc 0%, #fff 47%, #e6e2d9 50%, #fff 100%); clip-path: polygon(0 0, 100% 100%, 100% 0); filter: drop-shadow(-1px 2px 1px rgba(0, 0, 0, 0.12)); }
+body.projects .project-paper h2, body.projects .project-paper .paper-number, body.projects .project-paper .paper-label, body.projects .project-paper .paper-summary, body.projects .project-paper .paper-open, body.projects .project-paper .paper-tools > span { color: #454141 !important; }
+body.projects .project-paper .paper-tools > span { border-color: rgba(69, 65, 65, 0.4); background: rgba(69, 65, 65, 0.05); }
+/* The folded edge replaces the former crumpled-paper treatment. */
+body.projects .project-paper::before { display: none; }

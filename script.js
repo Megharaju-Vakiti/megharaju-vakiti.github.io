@@ -291,7 +291,7 @@ if (document.body.classList.contains("about")) {
       card.classList.remove("is-revealed");
     };
 
-    card.addEventListener("click", (event) => {
+    const supportsCategoryHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches; card.addEventListener("pointerenter", (event) => { if (supportsCategoryHover && event.pointerType !== "touch") startCardReveal(); }); card.addEventListener("focus", startCardReveal); card.addEventListener("click", (event) => { if (supportsCategoryHover) return;
       if (!card.classList.contains("is-pinned-revealed")) {
         event.preventDefault();
         card.classList.add("is-pinned-revealed");
