@@ -2591,3 +2591,38 @@ body.projects .project-paper h2, body.projects .project-paper .paper-number, bod
 body.projects .project-paper .paper-tools > span { border-color: rgba(69, 65, 65, 0.4); background: rgba(69, 65, 65, 0.05); }
 /* The folded edge replaces the former crumpled-paper treatment. */
 body.projects .project-paper::before { display: none; }
+/* Improve contrast on the project archive and keep its cards shadow-free. */
+body.projects,
+html:has(body.projects),
+.projects #main-content.project-showcase {
+  background: #0B1020 !important;
+}
+.project-category-heading,
+.project-category-heading h1,
+.project-category-heading p,
+.project-category-heading > span {
+  color: #FFFFFF !important;
+  text-shadow: none !important;
+}
+body.projects .project-paper,
+body.projects .project-paper:hover {
+  background: #161D31 !important;
+  color: #FFFFFF !important;
+  box-shadow: none !important;
+}
+body.projects .project-paper::after { filter: none; }
+body.projects .project-paper h2,
+body.projects .project-paper .paper-number,
+body.projects .project-paper .paper-label,
+body.projects .project-paper .paper-summary,
+body.projects .project-paper .paper-open {
+  color: #CBD5E1 !important;
+  text-shadow: none !important;
+}
+body.projects .project-paper h2 { color: #FFFFFF !important; }
+body.projects .project-paper .paper-tools > span {
+  border-color: #42506B;
+  background: #26324B;
+  color: #D6D2FF !important;
+  text-shadow: none !important;
+}
