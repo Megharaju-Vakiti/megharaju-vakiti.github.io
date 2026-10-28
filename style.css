@@ -2591,3 +2591,53 @@ body.projects .project-paper h2, body.projects .project-paper .paper-number, bod
 body.projects .project-paper .paper-tools > span { border-color: rgba(69, 65, 65, 0.4); background: rgba(69, 65, 65, 0.05); }
 /* The folded edge replaces the former crumpled-paper treatment. */
 body.projects .project-paper::before { display: none; }
+/* Lighter project archive and detail views, with shadows removed. */
+body.projects,
+html:has(body.projects),
+.projects #main-content.project-showcase,
+body.projects .page-loader {
+  background: #E9EEF5 !important;
+}
+.project-category-heading,
+.project-category-heading h1,
+.project-category-heading p,
+.project-category-heading > span {
+  color: #263445 !important;
+  text-shadow: none !important;
+}
+body.projects .project-paper,
+body.projects .project-paper:hover {
+  background: #FFFFFF !important;
+  color: #334155 !important;
+  box-shadow: none !important;
+}
+body.projects .project-paper::after { filter: none; }
+body.projects .project-paper h2,
+body.projects .project-paper .paper-number,
+body.projects .project-paper .paper-label,
+body.projects .project-paper .paper-summary,
+body.projects .project-paper .paper-open {
+  color: #475569 !important;
+  text-shadow: none !important;
+}
+body.projects .project-paper h2 { color: #263445 !important; }
+body.projects .project-paper .paper-tools > span {
+  border-color: #C7D2E0;
+  background: #E7EDF5;
+  color: #334155 !important;
+  text-shadow: none !important;
+}
+/* The same light palette applies to every project opened in the monitor. */
+body.projects .monitor-stage { background: #E9EEF5 !important; }
+body.projects .monitor-screen { background: #F8FAFC; color: #475569; }
+body.projects .monitor-details { background: #F1F5F9; color: #334155; }
+body.projects .monitor-kicker,
+body.projects .monitor-details h2 { color: #475569; }
+body.projects .monitor-details h1 { color: #263445; }
+body.projects .monitor-copy { color: #334155; }
+body.projects .monitor-tags li {
+  border-color: #C7D2E0;
+  background: #E7EDF5;
+  color: #334155;
+}
+body.projects .monitor-launch { box-shadow: none; }
